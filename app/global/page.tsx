@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import api from "@/src/lib/api";
 import SiteTable from "@/src/components/SiteTable";
 import InsertForm from "@/src/components/InsertForm";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, ArrowLeft, ArrowRight, Database, Globe } from "lucide-react";
@@ -210,12 +209,15 @@ export default function GlobalPage() {
           </CardHeader>
           <CardContent>
             <SiteTable
-              title=""
-              subtitle=""
-              color="purple"
-              data={dataMap[tab]}
-              loading={loading}
-            />
+  title=""
+  subtitle=""
+  color="purple"
+  data={dataMap[tab]}
+  loading={loading}
+  updateEndpoint={tab === "lignes" ? "/global/lignes" : undefined}
+  deleteEndpoint={tab === "lignes" ? "/global/lignes" : undefined}
+  onSuccess={load}
+/>
           </CardContent>
         </Card>
 

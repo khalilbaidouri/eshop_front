@@ -234,13 +234,16 @@ export default function Site1Page() {
             </div>
           </CardHeader>
           <CardContent>
-            <SiteTable
-              title=""
-              subtitle=""
-              color="teal"
-              data={data}
-              loading={loading}
-            />
+           <SiteTable
+  title=""
+  subtitle=""
+  color="teal"
+  data={data}
+  loading={loading}
+  updateEndpoint="/site1/lignes"
+  deleteEndpoint="/site1/lignes"
+  onSuccess={load}
+/>
           </CardContent>
         </Card>
 

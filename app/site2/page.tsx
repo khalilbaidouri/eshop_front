@@ -4,9 +4,25 @@ import { useEffect, useState } from "react";
 import api from "@/src/lib/api";
 import SiteTable from "@/src/components/SiteTable";
 import InsertForm from "@/src/components/InsertForm";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, Package, TrendingUp, DollarSign, ArrowLeft, ArrowRight, Database, Sparkles, AlertCircle } from "lucide-react";
+import {
+  RefreshCw,
+  Package,
+  TrendingUp,
+  DollarSign,
+  ArrowLeft,
+  ArrowRight,
+  Database,
+  Sparkles,
+  AlertCircle,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
@@ -34,14 +50,20 @@ export default function Site2Page() {
   }, []);
 
   const total = data.reduce((s, r) => s + Number(r.quantite || 0), 0);
-  const ca = data.reduce((s, r) => s + Number(r.quantite || 0) * Number(r.prixUnitaire || 0), 0);
+  const ca = data.reduce(
+    (s, r) => s + Number(r.quantite || 0) * Number(r.prixUnitaire || 0),
+    0,
+  );
   const avgOrderValue = data.length > 0 ? ca / data.length : 0;
   const avgQuantity = data.length > 0 ? total / data.length : 0;
 
   // Seuil pour les petits volumes (max 99 unités)
   const smallVolumeThreshold = 99;
-  const smallVolumeCount = data.filter(row => Number(row.quantite || 0) <= smallVolumeThreshold).length;
-  const smallVolumePercentage = data.length > 0 ? (smallVolumeCount / data.length) * 100 : 0;
+  const smallVolumeCount = data.filter(
+    (row) => Number(row.quantite || 0) <= smallVolumeThreshold,
+  ).length;
+  const smallVolumePercentage =
+    data.length > 0 ? (smallVolumeCount / data.length) * 100 : 0;
 
   // Objectif de croissance (exemple: +20% sur le CA)
   const growthTarget = 20;
@@ -54,7 +76,7 @@ export default function Site2Page() {
       icon: <Package className="w-5 h-5" />,
       color: "orange",
       suffix: "",
-      description: "Transactions petites quantités"
+      description: "Transactions petites quantités",
     },
     {
       label: "Quantité totale",
@@ -62,7 +84,7 @@ export default function Site2Page() {
       icon: <TrendingUp className="w-5 h-5" />,
       color: "orange",
       suffix: "unités",
-      description: "Volume total distribué"
+      description: "Volume total distribué",
     },
     {
       label: "Chiffre d'affaires",
@@ -70,7 +92,7 @@ export default function Site2Page() {
       icon: <DollarSign className="w-5 h-5" />,
       color: "orange",
       suffix: "DH",
-      description: "CA brut estimé"
+      description: "CA brut estimé",
     },
     {
       label: "Panier moyen",
@@ -78,7 +100,7 @@ export default function Site2Page() {
       icon: <Sparkles className="w-5 h-5" />,
       color: "orange",
       suffix: "DH",
-      description: "Valeur moyenne par ligne"
+      description: "Valeur moyenne par ligne",
     },
   ];
 
@@ -115,7 +137,8 @@ export default function Site2Page() {
                 </div>
               </div>
               <p className="text-sm text-muted-foreground ml-12">
-                Fragment contenant les lignes avec quantité &lt; 100 · Synchronisation globale automatique
+                Fragment contenant les lignes avec quantité &lt; 100 ·
+                Synchronisation globale automatique
               </p>
             </div>
 
@@ -125,7 +148,9 @@ export default function Site2Page() {
               variant="outline"
               className="gap-2 border-orange-200 hover:bg-orange-50"
             >
-              <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
+              <RefreshCw
+                className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`}
+              />
               Rafraîchir
             </Button>
           </div>
@@ -134,7 +159,10 @@ export default function Site2Page() {
         {/* Statistiques */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {statsCards.map((stat) => (
-            <Card key={stat.label} className="border-orange-100 hover:shadow-md transition-shadow">
+            <Card
+              key={stat.label}
+              className="border-orange-100 hover:shadow-md transition-shadow"
+            >
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
                   {stat.label}
@@ -183,20 +211,35 @@ export default function Site2Page() {
                 <div className="space-y-3">
                   <div>
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-muted-foreground">Petits volumes (≤ 99 unités)</span>
-                      <span className="font-medium text-orange-600">{Math.round(smallVolumePercentage)}%</span>
+                      <span className="text-muted-foreground">
+                        Petits volumes (≤ 99 unités)
+                      </span>
+                      <span className="font-medium text-orange-600">
+                        {Math.round(smallVolumePercentage)}%
+                      </span>
                     </div>
-                    <Progress value={smallVolumePercentage} className="h-2 bg-orange-100" />
+                    <Progress
+                      value={smallVolumePercentage}
+                      className="h-2 bg-orange-100"
+                    />
                     <p className="text-xs text-muted-foreground mt-1">
-                      {smallVolumeCount} lignes respectent le critère du fragment
+                      {smallVolumeCount} lignes respectent le critère du
+                      fragment
                     </p>
                   </div>
                   <div>
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-muted-foreground">Quantité moyenne par ligne</span>
-                      <span className="font-medium text-orange-600">{Math.round(avgQuantity)} unités</span>
+                      <span className="text-muted-foreground">
+                        Quantité moyenne par ligne
+                      </span>
+                      <span className="font-medium text-orange-600">
+                        {Math.round(avgQuantity)} unités
+                      </span>
                     </div>
-                    <Progress value={(avgQuantity / 100) * 100} className="h-2 bg-orange-100" />
+                    <Progress
+                      value={(avgQuantity / 100) * 100}
+                      className="h-2 bg-orange-100"
+                    />
                   </div>
                 </div>
               </CardContent>
@@ -216,15 +259,26 @@ export default function Site2Page() {
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="text-sm">Progression CA</span>
-                    <Badge variant={currentGrowth >= growthTarget ? "default" : "secondary"} 
-                           className={currentGrowth >= growthTarget ? "bg-green-100 text-green-700" : "bg-orange-100 text-orange-700"}>
+                    <Badge
+                      variant={
+                        currentGrowth >= growthTarget ? "default" : "secondary"
+                      }
+                      className={
+                        currentGrowth >= growthTarget
+                          ? "bg-green-100 text-green-700"
+                          : "bg-orange-100 text-orange-700"
+                      }
+                    >
                       +{currentGrowth}% / +{growthTarget}%
                     </Badge>
                   </div>
-                  <Progress value={(currentGrowth / growthTarget) * 100} className="h-2 bg-orange-100" />
+                  <Progress
+                    value={(currentGrowth / growthTarget) * 100}
+                    className="h-2 bg-orange-100"
+                  />
                   <p className="text-xs text-muted-foreground mt-2">
-                    {currentGrowth >= growthTarget 
-                      ? "✓ Objectif de croissance atteint !" 
+                    {currentGrowth >= growthTarget
+                      ? "✓ Objectif de croissance atteint !"
                       : `Encore ${growthTarget - currentGrowth}% à parcourir pour atteindre l'objectif`}
                   </p>
                 </div>
@@ -241,7 +295,8 @@ export default function Site2Page() {
               Nouvelle ligne de commande
             </CardTitle>
             <CardDescription>
-              Ajoutez une ligne avec quantité &lt; 100 — sera automatiquement propagée vers la base globale
+              Ajoutez une ligne avec quantité &lt; 100 — sera automatiquement
+              propagée vers la base globale
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
@@ -280,7 +335,9 @@ export default function Site2Page() {
               <div className="text-xs text-muted-foreground flex items-center gap-2">
                 <Database className="w-3 h-3" />
                 Synchronisation via trigger SYC_INSERT_LIGNE
-                {refreshing && <RefreshCw className="w-3 h-3 animate-spin ml-2" />}
+                {refreshing && (
+                  <RefreshCw className="w-3 h-3 animate-spin ml-2" />
+                )}
               </div>
             </div>
           </CardHeader>
@@ -288,9 +345,12 @@ export default function Site2Page() {
             <SiteTable
               title=""
               subtitle=""
-              color="coral"
+              color="teal"
               data={data}
               loading={loading}
+              updateEndpoint="/site1/lignes"
+              deleteEndpoint="/site1/lignes"
+              onSuccess={load}
             />
           </CardContent>
         </Card>
