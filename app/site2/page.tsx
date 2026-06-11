@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import api from "@/src/lib/api";
 import SiteTable from "@/src/components/SiteTable";
 import InsertForm from "@/src/components/InsertForm";
@@ -26,25 +26,24 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Progress } from "@/components/ui/progress";
 
 // ─── Animation variants ────────────────────────────────────────────────────
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 28 },
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, delay: i * 0.09, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.5, delay: i * 0.09, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
   }),
 };
 
-const scaleIn = {
+const scaleIn: Variants = {
   hidden: { opacity: 0, scale: 0.88 },
   visible: (i = 0) => ({
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.42, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.42, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
   }),
 };
 
@@ -95,7 +94,7 @@ function AnimatedProgress({
         className={`absolute inset-y-0 left-0 bg-gradient-to-r ${colorClass} rounded-full`}
         initial={{ width: 0 }}
         animate={{ width: `${width}%` }}
-        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
       />
     </div>
   );

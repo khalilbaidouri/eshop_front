@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import type { Variants } from "framer-motion";
 import api from "@/src/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,6 +35,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { toast } from "sonner";
+import Link from "next/link";
 
 type Commande = {
   idcommande: number;
@@ -45,16 +47,16 @@ type Commande = {
 
 // ─── Animation variants ────────────────────────────────────────────────────
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.45, delay: i * 0.09, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.45, delay: i * 0.09, ease: [0.22, 1, 0.36, 1] as any },
   }),
 };
 
-const rowVariant = {
+const rowVariant: Variants = {
   hidden: { opacity: 0, x: -12 },
   visible: (i: number) => ({
     opacity: 1,
@@ -119,8 +121,8 @@ export default function CommandesPage() {
     setSubmitting(true);
     try {
       await api.post("/commandes", {
-        idclient: Number(form.idClient),
-        idemploye: Number(form.idEmploye),
+        idClient: Number(form.idClient),
+        idEmploye: Number(form.idEmploye),
         dateLivraison: form.dateLivraison,
       });
       toast.success("Commande ajoutée avec succès");
@@ -134,10 +136,32 @@ export default function CommandesPage() {
   };
 
   const statsCards = [
-    { label: "Total commandes", value: commandes.length, icon: <ShoppingCart className="w-5 h-5" />, description: "Commandes enregistrées" },
-    { label: "Clients uniques", value: new Set(commandes.map(c => c.idclient)).size, icon: <User className="w-5 h-5" />, description: "Clients distincts" },
-    { label: "Employés actifs", value: new Set(commandes.map(c => c.idemploye)).size, icon: <ClipboardList className="w-5 h-5" />, description: "Employés impliqués" },
-    { label: "Ce mois", value: commandes.filter(c => new Date(c.dateCommande).getMonth() === new Date().getMonth()).length, icon: <Calendar className="w-5 h-5" />, description: "Commandes du mois" },
+    {
+      label: "Total commandes",
+      value: commandes.length,
+      icon: <ShoppingCart className="w-5 h-5" />,
+      description: "Commandes enregistrées",
+    },
+    {
+      label: "Clients uniques",
+      value: new Set(commandes.map(c => c.idclient)).size,
+      icon: <User className="w-5 h-5" />,
+      description: "Clients distincts",
+    },
+    {
+      label: "Employés actifs",
+      value: new Set(commandes.map(c => c.idemploye)).size,
+      icon: <ClipboardList className="w-5 h-5" />,
+      description: "Employés impliqués",
+    },
+    {
+      label: "Ce mois",
+      value: commandes.filter(c =>
+        new Date(c.dateCommande).getMonth() === new Date().getMonth()
+      ).length,
+      icon: <Calendar className="w-5 h-5" />,
+      description: "Commandes du mois",
+    },
   ];
 
   return (
@@ -171,7 +195,12 @@ export default function CommandesPage() {
             </div>
 
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-              <Button onClick={fetchCommandes} disabled={refreshing} variant="outline" className="gap-2 border-indigo-200 hover:bg-indigo-50">
+              <Button
+                onClick={fetchCommandes}
+                disabled={refreshing}
+                variant="outline"
+                className="gap-2 border-indigo-200 hover:bg-indigo-50"
+              >
                 <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
                 Actualiser
               </Button>
@@ -187,14 +216,29 @@ export default function CommandesPage() {
               custom={i}
               initial="hidden"
               animate="visible"
-              variants={{ hidden: { opacity: 0, scale: 0.88 }, visible: (i) => ({ opacity: 1, scale: 1, transition: { duration: 0.42, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] } }) }}
+              variants={{
+                hidden: { opacity: 0, scale: 0.88 },
+                visible: (i) => ({
+                  opacity: 1,
+                  scale: 1,
+                  transition: {
+                    duration: 0.42,
+                    delay: i * 0.08,
+                    ease: [0.22, 1, 0.36, 1] as any,
+                  },
+                }),
+              }}
               whileHover={{ y: -4, transition: { type: "spring", stiffness: 300 } }}
             >
               <Card className="border-indigo-100 hover:shadow-lg hover:border-indigo-200 transition-colors h-full">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
                     {stat.label}
-                    <motion.div className="p-1 bg-indigo-50 rounded-lg text-indigo-600" whileHover={{ rotate: 15 }} transition={{ type: "spring", stiffness: 400 }}>
+                    <motion.div
+                      className="p-1 bg-indigo-50 rounded-lg text-indigo-600"
+                      whileHover={{ rotate: 15 }}
+                      transition={{ type: "spring", stiffness: 400 }}
+                    >
                       {stat.icon}
                     </motion.div>
                   </CardTitle>
@@ -217,7 +261,11 @@ export default function CommandesPage() {
           <Card className="border-indigo-200 shadow-sm">
             <CardHeader className="bg-gradient-to-r from-indigo-50 to-white rounded-t-lg">
               <CardTitle className="text-lg flex items-center gap-2">
-                <motion.div className="w-1 h-6 bg-indigo-500 rounded-full" animate={{ scaleY: [1, 1.2, 1] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
+                <motion.div
+                  className="w-1 h-6 bg-indigo-500 rounded-full"
+                  animate={{ scaleY: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                />
                 Nouvelle commande
               </CardTitle>
               <CardDescription>Créez une commande pour un client existant</CardDescription>
@@ -225,8 +273,8 @@ export default function CommandesPage() {
             <CardContent className="pt-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 {[
-                  { label: "ID Client", key: "idClient", type: "number", placeholder: "Ex: 42" },
-                  { label: "ID Employé", key: "idEmploye", type: "number", placeholder: "Ex: 7" },
+                  { label: "ID Client *", key: "idClient", type: "number", placeholder: "Ex: 1" },
+                  { label: "ID Employé *", key: "idEmploye", type: "number", placeholder: "Ex: 1" },
                   { label: "Date de livraison", key: "dateLivraison", type: "date", placeholder: "" },
                 ].map(({ label, key, type, placeholder }) => (
                   <div key={key} className="space-y-2">
@@ -248,7 +296,10 @@ export default function CommandesPage() {
                     disabled={submitting}
                     className="gap-2 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-700 hover:to-indigo-600"
                   >
-                    {submitting ? <><Loader2 className="w-4 h-4 animate-spin" />Ajout...</> : <><Plus className="w-4 h-4" />Ajouter la commande</>}
+                    {submitting
+                      ? <><Loader2 className="w-4 h-4 animate-spin" />Ajout...</>
+                      : <><Plus className="w-4 h-4" />Ajouter la commande</>
+                    }
                   </Button>
                 </motion.div>
               </div>
@@ -266,8 +317,16 @@ export default function CommandesPage() {
                     Liste des commandes
                     <AnimatePresence mode="wait">
                       {!loading && (
-                        <motion.div key={commandes.length} initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.7 }} transition={{ duration: 0.2 }}>
-                          <Badge variant="secondary" className="ml-2">{commandes.length} commande{commandes.length > 1 ? "s" : ""}</Badge>
+                        <motion.div
+                          key={commandes.length}
+                          initial={{ opacity: 0, scale: 0.7 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.7 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <Badge variant="secondary" className="ml-2">
+                            {commandes.length} commande{commandes.length > 1 ? "s" : ""}
+                          </Badge>
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -329,7 +388,11 @@ export default function CommandesPage() {
                           <TableCell>
                             <div className="flex items-center gap-1.5">
                               <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-                              <span className="text-sm">{cmd.dateCommande ? new Date(cmd.dateCommande).toLocaleDateString("fr-FR") : "—"}</span>
+                              <span className="text-sm">
+                                {cmd.dateCommande
+                                  ? new Date(cmd.dateCommande).toLocaleDateString("fr-FR")
+                                  : "—"}
+                              </span>
                             </div>
                           </TableCell>
                           <TableCell>
@@ -350,19 +413,25 @@ export default function CommandesPage() {
         </motion.div>
 
         {/* ── Navigation ─────────────────────────────────────────── */}
-        <motion.div className="mt-8 flex justify-between items-center pt-4 border-t" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+        <motion.div
+          className="mt-8 flex justify-between items-center pt-4 border-t"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
           <motion.div whileHover={{ x: -3 }} whileTap={{ scale: 0.96 }}>
             <Button variant="ghost" size="sm" asChild className="gap-2">
-              <a href="/"><ArrowLeft className="w-4 h-4" />Dashboard</a>
+              <Link href="/"><ArrowLeft className="w-4 h-4" />Dashboard</Link>
             </Button>
           </motion.div>
           <div className="text-xs text-muted-foreground">Gestion des commandes</div>
           <motion.div whileHover={{ x: 3 }} whileTap={{ scale: 0.96 }}>
             <Button variant="ghost" size="sm" asChild className="gap-2">
-              <a href="/clients">Clients <ArrowRight className="w-4 h-4" /></a>
+              <Link href="/clients">Clients <ArrowRight className="w-4 h-4" /></Link>
             </Button>
           </motion.div>
         </motion.div>
+
       </main>
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import api from "@/src/lib/api";
 import SiteTable from "@/src/components/SiteTable";
 import InsertForm from "@/src/components/InsertForm";
@@ -28,27 +28,27 @@ interface TabConfig {
 
 // ─── Animation variants ────────────────────────────────────────────────────
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.45, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.45, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
   }),
 };
 
-const scaleIn = {
+const scaleIn: Variants = {
   hidden: { opacity: 0, scale: 0.92 },
   visible: (i = 0) => ({
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.4, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.4, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
   }),
 };
 
-const tableVariant = {
+const tableVariant: Variants = {
   hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" as const } },
   exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
 };
 
@@ -264,7 +264,7 @@ export default function GlobalPage() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
               className="overflow-hidden mb-8"
             >
               <Card className="border-purple-200 shadow-sm">

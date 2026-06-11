@@ -1,7 +1,6 @@
 "use client";
-
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import api from "@/src/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,7 +36,6 @@ import { toast } from "sonner";
 import Link from "next/link";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-
 type Categorie = { idCategorie: number; designation: string };
 type Produit = {
   idProduit: number;
@@ -48,27 +46,46 @@ type Produit = {
 };
 
 // ─── Animation variants ───────────────────────────────────────────────────────
-
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.45, delay: i * 0.09, ease: [0.22, 1, 0.36, 1] },
+    transition: {
+      duration: 0.45,
+      delay: i * 0.09,
+      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+    },
   }),
 };
 
-const rowVariant = {
+const rowVariant: Variants = {
   hidden: { opacity: 0, x: -12 },
   visible: (i: number) => ({
     opacity: 1,
     x: 0,
-    transition: { duration: 0.3, delay: i * 0.04, ease: "easeOut" },
+    transition: {
+      duration: 0.3,
+      delay: i * 0.04,
+      ease: "easeOut",
+    },
+  }),
+};
+
+const statsVariant: Variants = {
+  hidden: { opacity: 0, scale: 0.88 },
+  visible: (i: number) => ({
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.42,
+      delay: i * 0.08,
+      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+    },
   }),
 };
 
 // ─── Animated counter ─────────────────────────────────────────────────────────
-
 function AnimatedCount({ value }: { value: number }) {
   const [display, setDisplay] = useState(0);
   useEffect(() => {
@@ -89,7 +106,6 @@ function AnimatedCount({ value }: { value: number }) {
 }
 
 // ─── Category badge palette ───────────────────────────────────────────────────
-
 const palette = [
   "bg-blue-100 text-blue-700 border-blue-200",
   "bg-emerald-100 text-emerald-700 border-emerald-200",
@@ -100,7 +116,6 @@ const palette = [
 ];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
-
 export default function ProduitsPage() {
   const [produits, setProduits] = useState<Produit[]>([]);
   const [categories, setCategories] = useState<Categorie[]>([]);
@@ -108,7 +123,6 @@ export default function ProduitsPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [loadingCategories, setLoadingCategories] = useState(false);
-
   const [form, setForm] = useState({
     designation: "",
     prixUnitaire: "",
@@ -117,7 +131,6 @@ export default function ProduitsPage() {
   });
 
   // ── Fetch helpers ──────────────────────────────────────────────────────────
-
   const fetchProduits = async () => {
     setRefreshing(true);
     setLoading(true);
@@ -159,7 +172,6 @@ export default function ProduitsPage() {
   }, []);
 
   // ── Add product ────────────────────────────────────────────────────────────
-
   const addProduit = async () => {
     if (!form.designation || !form.prixUnitaire) {
       toast.error("Désignation et prix sont requis");
@@ -169,7 +181,6 @@ export default function ProduitsPage() {
       toast.error("Veuillez sélectionner une catégorie");
       return;
     }
-
     setSubmitting(true);
     try {
       await api.post("/produits", {
@@ -194,17 +205,14 @@ export default function ProduitsPage() {
   };
 
   // ── Derived stats ──────────────────────────────────────────────────────────
-
   const avgPrice =
     produits.length > 0
       ? produits.reduce((s, p) => s + (p.prixUnitaire ?? 0), 0) /
         produits.length
       : 0;
-
   const catCount = new Set(
     produits.map((p) => p.categorie?.idCategorie).filter(Boolean),
   ).size;
-
   const statsCards = [
     {
       label: "Total produits",
@@ -239,10 +247,10 @@ export default function ProduitsPage() {
   });
 
   // ── Render ─────────────────────────────────────────────────────────────────
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
       <main className="container mx-auto px-4 py-8 max-w-7xl">
+
         {/* Header */}
         <motion.div
           className="mb-8"
@@ -281,7 +289,6 @@ export default function ProduitsPage() {
                 Catalogue des produits disponibles à la vente
               </p>
             </div>
-
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Button
                 onClick={fetchProduits}
@@ -306,18 +313,7 @@ export default function ProduitsPage() {
               custom={i}
               initial="hidden"
               animate="visible"
-              variants={{
-                hidden: { opacity: 0, scale: 0.88 },
-                visible: (i) => ({
-                  opacity: 1,
-                  scale: 1,
-                  transition: {
-                    duration: 0.42,
-                    delay: i * 0.08,
-                    ease: [0.22, 1, 0.36, 1],
-                  },
-                }),
-              }}
+              variants={statsVariant}
               whileHover={{
                 y: -4,
                 transition: { type: "spring", stiffness: 300 },
@@ -559,7 +555,6 @@ export default function ProduitsPage() {
                         <TableHead className="text-xs font-semibold text-emerald-700">
                           Unité
                         </TableHead>
-                        
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -602,7 +597,6 @@ export default function ProduitsPage() {
                               </span>
                             )}
                           </TableCell>
-                          
                         </motion.tr>
                       ))}
                     </TableBody>
@@ -639,6 +633,7 @@ export default function ProduitsPage() {
             </Button>
           </motion.div>
         </motion.div>
+
       </main>
     </div>
   );

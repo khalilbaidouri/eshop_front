@@ -4,10 +4,17 @@
 import { Heart, GitFork, Database, Globe, Server, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 
+// ─── Types ────────────────────────────────────────────────────────────────────
+type FooterLink = {
+  href?: string;
+  label: string;
+  icon?: React.ReactNode;
+};
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
-  const links = {
+  const links: Record<string, FooterLink[]> = {
     "Navigation": [
       { href: "/", label: "Dashboard", icon: <LayoutDashboard className="w-3 h-3" /> },
       { href: "/global", label: "Site Global", icon: <Globe className="w-3 h-3" /> },

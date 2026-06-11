@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import type { Variants } from "framer-motion";
 import api from "@/src/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,16 +52,16 @@ type Client = {
 
 // ─── Animation variants ────────────────────────────────────────────────────
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.45, delay: i * 0.09, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.45, delay: i * 0.09, ease: [0.22, 1, 0.36, 1] as any },
   }),
 };
 
-const rowVariant = {
+const rowVariant: Variants = {
   hidden: { opacity: 0, x: -12 },
   visible: (i: number) => ({
     opacity: 1,
@@ -121,7 +122,11 @@ export default function ClientsPage() {
     try {
       await api.post("/clients/add", form);
       toast.success("Client ajouté avec succès");
-      setForm({ codeclient: "", societe: "", contact: "", adresse: "", ville: "", pays: "", codePostal: "", telephone: "" });
+      setForm({
+        codeclient: "", societe: "", contact: "",
+        adresse: "", ville: "", pays: "",
+        codePostal: "", telephone: "",
+      });
       fetchClients();
     } catch {
       toast.error("Impossible d'ajouter le client");
@@ -182,7 +187,12 @@ export default function ClientsPage() {
             </div>
 
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-              <Button onClick={fetchClients} disabled={refreshing} variant="outline" className="gap-2 border-sky-200 hover:bg-sky-50">
+              <Button
+                onClick={fetchClients}
+                disabled={refreshing}
+                variant="outline"
+                className="gap-2 border-sky-200 hover:bg-sky-50"
+              >
                 <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
                 Actualiser
               </Button>
@@ -198,14 +208,29 @@ export default function ClientsPage() {
               custom={i}
               initial="hidden"
               animate="visible"
-              variants={{ hidden: { opacity: 0, scale: 0.88 }, visible: (i) => ({ opacity: 1, scale: 1, transition: { duration: 0.42, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] } }) }}
+              variants={{
+                hidden: { opacity: 0, scale: 0.88 },
+                visible: (i) => ({
+                  opacity: 1,
+                  scale: 1,
+                  transition: {
+                    duration: 0.42,
+                    delay: i * 0.08,
+                    ease: [0.22, 1, 0.36, 1] as any,
+                  },
+                }),
+              }}
               whileHover={{ y: -4, transition: { type: "spring", stiffness: 300 } }}
             >
               <Card className="border-sky-100 hover:shadow-lg hover:border-sky-200 transition-colors h-full">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
                     {stat.label}
-                    <motion.div className="p-1 bg-sky-50 rounded-lg text-sky-600" whileHover={{ rotate: 15 }} transition={{ type: "spring", stiffness: 400 }}>
+                    <motion.div
+                      className="p-1 bg-sky-50 rounded-lg text-sky-600"
+                      whileHover={{ rotate: 15 }}
+                      transition={{ type: "spring", stiffness: 400 }}
+                    >
                       {stat.icon}
                     </motion.div>
                   </CardTitle>
@@ -228,7 +253,11 @@ export default function ClientsPage() {
           <Card className="border-sky-200 shadow-sm">
             <CardHeader className="bg-gradient-to-r from-sky-50 to-white rounded-t-lg">
               <CardTitle className="text-lg flex items-center gap-2">
-                <motion.div className="w-1 h-6 bg-sky-500 rounded-full" animate={{ scaleY: [1, 1.2, 1] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
+                <motion.div
+                  className="w-1 h-6 bg-sky-500 rounded-full"
+                  animate={{ scaleY: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                />
                 Nouveau client
               </CardTitle>
               <CardDescription>Remplissez les informations du client à ajouter</CardDescription>
@@ -254,7 +283,10 @@ export default function ClientsPage() {
                     disabled={submitting}
                     className="gap-2 bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-700 hover:to-sky-600"
                   >
-                    {submitting ? <><Loader2 className="w-4 h-4 animate-spin" />Ajout...</> : <><Plus className="w-4 h-4" />Ajouter le client</>}
+                    {submitting
+                      ? <><Loader2 className="w-4 h-4 animate-spin" />Ajout...</>
+                      : <><Plus className="w-4 h-4" />Ajouter le client</>
+                    }
                   </Button>
                 </motion.div>
               </div>
@@ -272,8 +304,16 @@ export default function ClientsPage() {
                     Liste des clients
                     <AnimatePresence mode="wait">
                       {!loading && (
-                        <motion.div key={clients.length} initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.7 }} transition={{ duration: 0.2 }}>
-                          <Badge variant="secondary" className="ml-2">{clients.length} client{clients.length > 1 ? "s" : ""}</Badge>
+                        <motion.div
+                          key={clients.length}
+                          initial={{ opacity: 0, scale: 0.7 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.7 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <Badge variant="secondary" className="ml-2">
+                            {clients.length} client{clients.length > 1 ? "s" : ""}
+                          </Badge>
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -291,7 +331,9 @@ export default function ClientsPage() {
             </CardHeader>
             <CardContent>
               {loading ? (
-                <div className="space-y-3">{[...Array(5)].map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}</div>
+                <div className="space-y-3">
+                  {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}
+                </div>
               ) : clients.length === 0 ? (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
                   <Building className="w-12 h-12 mx-auto text-muted-foreground mb-3 opacity-40" />
@@ -319,16 +361,24 @@ export default function ClientsPage() {
                           className="border-b border-sky-50/60 hover:bg-sky-50/30 transition-colors"
                         >
                           <TableCell>
-                            <Badge variant="outline" className="font-mono text-sky-700 border-sky-200">#{client.idclient}</Badge>
+                            <Badge variant="outline" className="font-mono text-sky-700 border-sky-200">
+                              #{client.idclient}
+                            </Badge>
                           </TableCell>
-                          <TableCell className="font-mono text-xs text-muted-foreground">{client.codeclient}</TableCell>
+                          <TableCell className="font-mono text-xs text-muted-foreground">
+                            {client.codeclient}
+                          </TableCell>
                           <TableCell>
                             <div className="font-medium">{client.societe}</div>
                             {client.adresse && (
-                              <div className="text-xs text-muted-foreground hidden lg:block truncate max-w-[180px]">{client.adresse}</div>
+                              <div className="text-xs text-muted-foreground hidden lg:block truncate max-w-[180px]">
+                                {client.adresse}
+                              </div>
                             )}
                           </TableCell>
-                          <TableCell className="text-sm">{client.contact || <span className="text-muted-foreground">—</span>}</TableCell>
+                          <TableCell className="text-sm">
+                            {client.contact || <span className="text-muted-foreground">—</span>}
+                          </TableCell>
                           <TableCell>
                             {client.ville ? (
                               <div className="flex items-center gap-1.5">
@@ -338,9 +388,10 @@ export default function ClientsPage() {
                             ) : <span className="text-muted-foreground">—</span>}
                           </TableCell>
                           <TableCell>
-                            {client.pays ? (
-                              <Badge variant="secondary" className="text-xs">{client.pays}</Badge>
-                            ) : <span className="text-muted-foreground">—</span>}
+                            {client.pays
+                              ? <Badge variant="secondary" className="text-xs">{client.pays}</Badge>
+                              : <span className="text-muted-foreground">—</span>
+                            }
                           </TableCell>
                           <TableCell>
                             {client.telephone ? (
@@ -361,7 +412,12 @@ export default function ClientsPage() {
         </motion.div>
 
         {/* ── Navigation ─────────────────────────────────────────── */}
-        <motion.div className="mt-8 flex justify-between items-center pt-4 border-t" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+        <motion.div
+          className="mt-8 flex justify-between items-center pt-4 border-t"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
           <motion.div whileHover={{ x: -3 }} whileTap={{ scale: 0.96 }}>
             <Button variant="ghost" size="sm" asChild className="gap-2">
               <Link href="/"><ArrowLeft className="w-4 h-4" />Dashboard</Link>
@@ -374,6 +430,7 @@ export default function ClientsPage() {
             </Button>
           </motion.div>
         </motion.div>
+
       </main>
     </div>
   );
