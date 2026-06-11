@@ -7,6 +7,7 @@ import {
   Menu, X, RefreshCw, Wifi, WifiOff,
   Package, Users, BarChart3, List,
   Network,
+  Command,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +20,7 @@ const NAV = [
   { href: "/clients",label: "Clients",   Icon: Users,           color: "blue"   },
   { href: "/produits",label: "Produits", Icon: Package,         color: "emerald"},
   { href: "/stats",  label: "Stats CA",  Icon: BarChart3,       color: "gray"   },
+  { href: "/commandes",  label: "Commandes",  Icon: Command,       color: "gray"   },
 ];
 
 const activeColor: Record<string, string> = {
